@@ -6,6 +6,8 @@
 #define CHANGE_H_
 
 #include <string>
+#include <vector>
+#include <numeric>
 using namespace std;
 
 /* Calcula o troco num determinado montante m, utilizando um n�mero m�nimo

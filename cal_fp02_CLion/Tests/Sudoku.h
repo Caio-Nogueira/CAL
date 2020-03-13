@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+
 using namespace std;
 
 #define IllegalArgumentException -1
@@ -72,6 +74,11 @@ public:
 	 * Imprime o Sudoku.
 	 */
 	void print();
+
+	bool isValid(int number, int row, int col);
+
+	pair<int, int> findEmpty();
+
 };
 
 #endif /* SUDOKU_H_ */

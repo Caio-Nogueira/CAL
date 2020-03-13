@@ -24,6 +24,8 @@ Sudoku::Sudoku(int nums[9][9])
 {
 	this->initialize();
 
+	countFilled = 0;
+
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 9; j++)
@@ -84,6 +86,7 @@ int** Sudoku::getNumbers()
 bool Sudoku::isComplete()
 {
 	return countFilled == 9 * 9;
+    //return findEmpty().first == 10 && findEmpty().second == 10;
 }
 
 
@@ -94,7 +97,33 @@ bool Sudoku::isComplete()
  */
 bool Sudoku::solve()
 {
+
+
 	if (isComplete()) return true;
+
+	pair <int, int> pos = findEmpty();
+
+	for (int i = 1; i < 10; i++){
+	    if (this->isValid(i, pos.first, pos.second)){
+	        numbers[pos.first][pos.second] = i;
+	        countFilled++;
+	        lineHasNumber[pos.first][i] = true;
+	        columnHasNumber[pos.second][i] = true;
+	        block3x3HasNumber[pos.first/3][pos.second/3][i] = true;
+
+	        if (solve()) return true;
+
+            //number previously filled doesnt lead to the correct solution -> backtrack
+
+            numbers[pos.first][pos.second] = 0;
+            lineHasNumber[pos.first][i] = false;
+            columnHasNumber[pos.second][i] = false;
+            block3x3HasNumber[pos.first/3][pos.second/3][i] = false;
+            countFilled--;
+	    }
+	}
+	return false;
+
 }
 
 
@@ -111,4 +140,32 @@ void Sudoku::print()
 
 		cout << endl;
 	}
+
+}
+
+bool Sudoku::isValid(int number, int row, int col) {
+    if (lineHasNumber[row][number]) return false;
+
+    if (columnHasNumber[col][number]) return false;
+
+    if (block3x3HasNumber[row/3][col/3][number]) return false;
+
+    return true;
+}
+
+
+pair<int, int> Sudoku::findEmpty() {
+    pair<int, int> result;
+
+    for (int row = 0; row < 9; row++){
+        for (int col = 0; col < 9; col++){
+            if (numbers[row][col] == 0){
+                result.first = row;
+                result.second = col;
+                return result;
+            }
+        }
+    }
+    result = {10, 10};
+    return result;
 }
